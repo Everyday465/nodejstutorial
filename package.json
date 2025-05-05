@@ -1,0 +1,27 @@
+{
+  "name": "nodejs-example",
+  "version": "1.0.0",
+  "description": "tutorial",
+  "main": "app.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Everyday465/nodejstutorial.git"
+  },
+  "author": "elijah",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Everyday465/nodejstutorial/issues"
+  },
+  "homepage": "https://github.com/Everyday465/nodejstutorial#readme",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "express": "^5.1.0",
+    "jquery": "^3.7.1"
+  }
+}

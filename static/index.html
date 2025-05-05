@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="/public/css/index.css">
+<div>
+    <h1>Some html code</h1>
+    <form action="/" method="POST" id="form">
+        <div class="form-group">
+            <label for="email">Email Address:</label>
+            <input type="email" class="form-control" name="email">
+        </div>
+        <div class="form-group">
+            <label for="pwd">Password</label>
+            <input type="password" class="form-control" name="password">
+        </div>
+        <button type="submit" class="btn btn default">Submit</button>
+    </form>
+    
+
+<!-- tutorial 11 <script src="/public/js/main.js"></script> -->
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+<script>
+$(document).ready(()=>{
+    //take in e (event) as a parameter
+    $('#form').submit((e)=>{
+        e.preventDefault(); //Stops the form from submitting and reloading the page
+        //use ajax to make post req
+        $.ajax({
+            url:'/',
+            type : 'post',
+            contentType : 'application/json',
+            //serialise the email n password in an array object
+            data : JSON.stringify($('#form').serializeArray()),
+            success : (response)=>{
+                console.log('successful repsonse');
+                console.log(response);
+            }
+        })
+    })
+})
+</script>
+    
+</div>

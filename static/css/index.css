@@ -1,0 +1,30 @@
+h1 {
+    font-weight: bold;
+}
+
+form {
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+.form-group {
+    display:flex;
+    flex-direction:column;
+    gap: 8px;
+}
+
+.form-control {
+    all:unset;
+    border-radius: 10px;
+    border: 1px solid black;
+    max-width: 25%;
+}
+
+.btn {
+    align-content: center;
+    all:unset;
+    border-radius: 10px;
+    background-color: dimgrey;
+    cursor: pointer;
+    max-width: 10%;
+}

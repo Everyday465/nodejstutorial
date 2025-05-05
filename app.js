@@ -187,7 +187,7 @@ const fs = require('fs');
 /* tutorial 6 read and write streams
 const fs = require('fs');
 
-const readStream = fs.createReadStream('./example.txt','utf8'); //reads data in chunks so it doesnt have to wait until all is read
+const readStream = fs.createReadStream('./example.txt','utf8'); //reads data in chunks so it doesnt have to wait until all is read && to prevent erro from max buffer limit
 const writeStream = fs.createWriteStream('example2.txt');
 //readstream inherts the event listener module 
 readStream.on('data',(chunk)=>{
@@ -195,4 +195,171 @@ readStream.on('data',(chunk)=>{
     writeStream.write(chunk);
 })
 
+*/
+
+/* tutroial 7 pipechain and zlib
+const fs = require('fs');
+//compressing files module
+const zlib = require('zlib');
+//transform stream: takes the input, receives the data and manupilate the data. in this case is compressing
+const gzip =zlib.createGzip();
+const gunzip =zlib.createGunzip();
+
+const readStream = fs.createReadStream('./example.txt','utf8'); //reads data in chunks so it doesnt have to wait until all is read && to prevent erro from max buffer limit
+const writeStream = fs.createWriteStream('example2.txt.gz');
+
+const readStreamGunzip = fs.createReadStream('./example2.txt.gz'); 
+const writeStreamGunzip = fs.createWriteStream('uncompressed.txt');
+//pipe: take in a input and send to a destination
+//pipe chaining
+readStream.pipe(gzip).pipe(writeStream);
+//readStreamGunzip.pipe(gunzip).pipe(writeStreamGunzip);
+
+writeStream.on('finish', () => {
+    console.log('Compression finished ✅');
+  
+    // 2. Now DECOMPRESS example2.txt.gz -> uncompressed.txt
+    const readStreamGunzip = fs.createReadStream('./example2.txt.gz');
+    const writeStreamGunzip = fs.createWriteStream('uncompressed.txt');
+  
+    readStreamGunzip.pipe(gunzip).pipe(writeStreamGunzip);
+  
+    writeStreamGunzip.on('finish', () => {
+      console.log('Decompression finished ✅');
+    });
+  });
+
+*/
+
+/* tutorial 8 http module
+const http = require('http');
+const server = http.createServer((req,res)=>{
+    if(req.url === '/'){
+        //write the response
+        res.write("hello world for node js");
+        //send the response
+        res.end();
+    } else {
+        res.write('using some other domain');
+        res.end();
+    }
+});
+
+//get server up n running, which port im gonna request at
+server.listen('3000');
+
+*/
+
+
+/* tutorial 9 html & fs module
+const http = require('http');
+const fs = require('fs');
+
+//read html in server
+// const server = http.createServer((req,res)=>{
+//     const readStream = fs.createReadStream('./static/index.html');
+//     //200 is status code
+//     res.writeHead(200,{'Content-Type':'text/html'});
+//     //res is also a writeStream. eg. readStream.pipe(writeStream)
+//     readStream.pipe(res);
+
+// }).listen(3000);
+
+//read json
+// const server = http.createServer((req,res)=>{
+//     const readStream = fs.createReadStream('./static/example.json');
+//     //200 is status code
+//     res.writeHead(200,{'Content-Type':'application/json'});
+//     //res is also a writeStream. eg. readStream.pipe(writeStream)
+//     readStream.pipe(res);
+
+
+// }).listen(3000);
+
+const server = http.createServer((req,res)=>{
+    const readStream = fs.createReadStream('./static/example.png');
+    //200 is status code
+    res.writeHead(200,{'Content-Type':'image/png'});
+    //res is also a writeStream. eg. readStream.pipe(writeStream)
+    readStream.pipe(res);
+
+
+}).listen(3000);
+*/
+
+/* tutorial 10 npm packages
+//using npm i lodash & npm uninstall lodash
+const _ = require('lodash');
+let example = _.fill([1,2,3,4,5],"banana",1,4);
+console.log(example);
+*/
+
+/*express param & query
+const express = require('express');
+const app = express();
+
+app.get('/', (req, res)=>{
+    res.send('hello world');
+});
+
+app.get('/example',(req,res)=>{
+    res.send('hitting route');
+})
+
+app.get('/example/:name/:age',(req, res)=>{
+    console.log(req.params);
+    console.log(req.query);
+    res.send(req.params.name + ':' + req.params.age);
+});
+app.listen('3000');
+*/
+
+/* tutorial 11 http post req mehtod & body parse module
+const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser');
+const app = express();
+
+app.use('/public',express.static(path.join(__dirname,'static')));
+//encode the url
+app.use(bodyParser.urlencoded({extended: false}));
+
+app.get('/', (req, res)=>{
+    res.sendFile(path.join(__dirname,'static','index.html'));
+});
+
+app.post('/',(req,res)=>{
+    //provide object of email n password
+    console.log(req.body);
+    //database work here
+    res.send('successfully posted data');
+});
+
+app.listen('3000');
+*/
+
+
+/* tutorial 12 working with json data with express & body parse module
+const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser');
+const app = express();
+
+app.use('/public',express.static(path.join(__dirname,'static')));
+//encode the url 
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json()); 
+
+app.get('/', (req, res)=>{
+    res.sendFile(path.join(__dirname,'static','index.html'));
+});
+
+app.post('/',(req,res)=>{
+    //provide object of email n password
+    console.log(req.body);
+    //database work here
+    res.json({success: true});
+});
+
+app.listen('3000');
 */

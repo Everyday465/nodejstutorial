@@ -7,80 +7,80 @@
  */
 
 
- /* tutorial 2 events module
- const EventEmitter = require('events');
- const eventEmitter = new EventEmitter();
+/* tutorial 2 events module
+const EventEmitter = require('events');
+const eventEmitter = new EventEmitter();
 
- eventEmitter.on('tutorial', (num1,num2) =>{
-    console.log('tutorial event has occured');
-    console.log(num1+num2);
- })
+eventEmitter.on('tutorial', (num1,num2) =>{
+   console.log('tutorial event has occured');
+   console.log(num1+num2);
+})
 
- eventEmitter.emit('tutorial',1,2);
+eventEmitter.emit('tutorial',1,2);
 
 
- //extending event 
- class Person extends EventEmitter{
-    constructor(name){
-        super();
-        this._name =name;
-    }
-    get name(){
-        return this._name;
-    }
- }
+//extending event 
+class Person extends EventEmitter{
+   constructor(name){
+       super();
+       this._name =name;
+   }
+   get name(){
+       return this._name;
+   }
+}
 
- let pedro = new Person("Pedro");
- //listener
- pedro.on('name',()=>{
-    console.log("my name is "+ pedro.name)
- });
- let christina = new Person("Christina");
- christina.on('name',()=>{
-    console.log("my name is "+ christina.name)
- });
+let pedro = new Person("Pedro");
+//listener
+pedro.on('name',()=>{
+   console.log("my name is "+ pedro.name)
+});
+let christina = new Person("Christina");
+christina.on('name',()=>{
+   console.log("my name is "+ christina.name)
+});
 
 //executed based on order emitted(synchronously)
- pedro.emit('name');
- christina.emit('name');
+pedro.emit('name');
+christina.emit('name');
 
- */
+*/
 
- /* tutorial 3 Readline
- const readline = require('readline');
- const rl = readline.createInterface({
-    input : process.stdin,
-    output : process.stdout 
- });
+/* tutorial 3 Readline
+const readline = require('readline');
+const rl = readline.createInterface({
+   input : process.stdin,
+   output : process.stdout 
+});
 
- let num1 = Math.floor((Math.random() * 10)+1);
- let num2 = Math.floor((Math.random() * 10)+1);
- let answer = num1+num2;
+let num1 = Math.floor((Math.random() * 10)+1);
+let num2 = Math.floor((Math.random() * 10)+1);
+let answer = num1+num2;
 
- rl.question(`What is ${ num1 } + ${ num2 }? \n`,
- (userInput)=>{
-    if(userInput.trim()==answer){
-        rl.close();
-    }
-    else {
-        rl.setPrompt('Incorrect resposne, please try again. \n');
-        rl.prompt();
-        //listens to user input and check
-        //creates loop until
-        rl.on('line',(userInput)=>{
-            if(userInput.trim()==answer){
-                rl.close();
-            } else {
-                rl.setPrompt(`Your answer of ${ userInput } is wrong.\n`);
-                rl.prompt();
-            }
+rl.question(`What is ${ num1 } + ${ num2 }? \n`,
+(userInput)=>{
+   if(userInput.trim()==answer){
+       rl.close();
+   }
+   else {
+       rl.setPrompt('Incorrect resposne, please try again. \n');
+       rl.prompt();
+       //listens to user input and check
+       //creates loop until
+       rl.on('line',(userInput)=>{
+           if(userInput.trim()==answer){
+               rl.close();
+           } else {
+               rl.setPrompt(`Your answer of ${ userInput } is wrong.\n`);
+               rl.prompt();
+           }
 
-        })
-    }
- });
+       })
+   }
+});
 
 rl.on('close',()=>{
-    console.log("correct!!");
+   console.log("correct!!");
 })
 
 */
@@ -314,14 +314,14 @@ app.get('/example/:name/:age',(req, res)=>{
 app.listen('3000');
 */
 
-/* tutorial 11 http post req mehtod & body parse module
+/* //tutorial 11 http post req mehtod & body parse module
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const app = express();
 
 app.use('/public',express.static(path.join(__dirname,'static')));
-//encode the url
+//encode the url. parses the data for use and put inside the request body
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.get('/', (req, res)=>{
@@ -348,6 +348,7 @@ const app = express();
 app.use('/public',express.static(path.join(__dirname,'static')));
 //encode the url 
 app.use(bodyParser.urlencoded({extended: false}));
+//parse the json and attach to the request.body (basically turn the json into an array)
 app.use(bodyParser.json()); 
 
 app.get('/', (req, res)=>{
@@ -363,3 +364,143 @@ app.post('/',(req,res)=>{
 
 app.listen('3000');
 */
+
+/* tutorial 13 input validatio with express & joi
+const express = require('express');
+const path = require('path');
+const Joi = require('joi');
+const bodyParser = require('body-parser');
+const app = express();
+
+app.use('/public', express.static(path.join(__dirname, 'static')));
+//encode the url 
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'static', 'index.html'));
+});
+
+app.post('/', (req, res) => {
+    //provide object of email n password
+    console.log(req.body);
+    //blueprint
+    const schema = Joi.object().keys({
+        email: Joi.string().trim().email().required(),
+        password: Joi.string().min(5).max(10).required(),
+    });
+
+    //validation [.validate is outdated from latest patch]
+    // Joi.validate(req.body,schema,(err,result)=>{
+    //     if(err){
+    //         console.log(err)
+    //         res.send('error has occured');
+    //     }
+    //     console.log(result)
+    //     res.send('successdully posted data');
+    // })
+
+    const validation = schema.validate(req.body);
+    if (validation.error) {
+        res.send("something went wrong");
+    }
+    res.send("success");
+
+});
+
+app.listen('3000');
+*/
+
+/* tutorial 14 joi validation for array strings & objects
+const Joi = require('joi');
+const arrayString = ['banana','apple','mango'];
+const arrayObject = [{example:'example1'},{example:'example2'}];
+
+const userInput = { 
+                    personalInfo:{ 
+                        streetAddress: '122345678',
+                        city: 'qwertyty',
+                        state: 'fl',
+                    }, 
+                    preferences: arrayObject
+                };
+
+
+const personalInfoSchema = Joi.object().keys({
+    streetAddress: Joi.string().trim().required(),
+    city: Joi.string().trim().required(),
+    state: Joi.string().trim().length(2).required(),
+});
+//array() give an array schema & items(Joi.string()) ensure all items in array are string
+const preferencesSchema = Joi.array().items(Joi.object().keys({
+    example: Joi.string().required(),
+}
+));
+
+const schema = Joi.object().keys({
+    personalInfo: personalInfoSchema,
+    preferences: preferencesSchema
+});
+
+const validation = schema.validate(userInput);
+    if (validation.error) {
+        console.log(validation.error);
+    }
+console.log(validation.value);
+*/
+
+/* tutorial 15 ejs templatesd for dynamic website
+const express = require('express');
+const path = require('path');
+const app = express();
+
+app.use('/public', express.static(path.join(__dirname, 'static')));
+app.set('view engine','ejs');
+
+app.get('/:userQuery', (req, res) => {
+    res.render('index',{data:{userQuery:req.params.userQuery,
+                            searchResults : ['book1','book2','book3'],
+                            loggedIn: true,
+                            username: 'udqwibudqbd'
+    }});
+});
+
+app.listen('3000');
+
+*/
+
+/* tutorial 16 middleware 
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+
+//check if user sent a json data & process it & attach to the req body
+app.use(bodyParser.json());
+//'next' tells express know i have finish processing this request
+app.use((req,res,next)=>{
+    req.banana='banana';
+
+    next();
+});
+
+app.get('/',(req,res)=>{
+    console.log(req.banana);
+    res.send('Middleware');
+});
+
+app.listen('3000');
+*/
+
+
+//tutorial 17 express router
+const express = require('express');
+const path = require('path');
+const app = express();
+
+app.use('/public', express.static(path.join(__dirname, 'static')));
+app.set('view engine','ejs');
+
+const people = require('./routes/people');
+
+app.use('/people',people);
+
+app.listen(3000);

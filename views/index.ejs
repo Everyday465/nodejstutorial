@@ -1,0 +1,45 @@
+<link rel="stylesheet" href="/public/css/index.css">
+<div>
+    
+    <h1>You searched for : <%= data.userQuery %> </h1>
+    <% if(data.loggedIn){ %>
+        <h2>You are logged in as : <%= data.username %> </h2>
+    <% }; %>
+    <ul>
+        <!-- <li>
+            <%= data.searchResults[0] %>
+        </li> -->
+        <% data.searchResults.forEach(result=>{ %>
+            <li> <%= result %> </li>
+        
+        <% }); %>
+    </ul>
+
+
+    <!-- tutorial 11 <script src="/public/js/main.js"></script> -->
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+    <!-- tutorial 12 <script>
+$(document).ready(()=>{
+    //take in e (event) as a parameter
+    $('#form').submit((e)=>{
+        e.preventDefault(); //Stops the form from submitting and reloading the page
+        //use ajax to make post req
+        $.ajax({
+            url:'/',
+            type : 'post',
+            contentType : 'application/json',
+            //serialise the email n password in an array object
+            data : JSON.stringify($('#form').serializeArray()),
+            success : (response)=>{
+                console.log('successful repsonse');
+                console.log(response);
+            }
+        })
+    })
+})
+</script> -->
+
+</div>
